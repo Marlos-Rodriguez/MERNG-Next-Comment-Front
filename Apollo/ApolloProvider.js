@@ -1,5 +1,5 @@
-import "../styles/globals.css";
 import React from "react";
+import App from "../pages/_app";
 import ApolloClient from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { createHttpLink } from "apollo-link-http";
@@ -14,12 +14,8 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-function MyApp({ Component, pageProps }) {
-  return (
-    <ApolloProvider client={client}>
-      <Component {...pageProps} />
-    </ApolloProvider>
-  );
-}
-
-export default MyApp;
+export default (
+  <ApolloProvider client={client}>
+    <App />
+  </ApolloProvider>
+);
