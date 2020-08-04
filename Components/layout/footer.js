@@ -1,16 +1,14 @@
 import React from "react";
 import { css } from "@emotion/core";
-import styled from "@emotion/styled";
 
 const Footer = () => {
   return (
     <>
       <footer
         css={css`
-          background-color: rgba(44, 62, 80);
+          background-color: rgba(18, 18, 18);
           margin-top: 5rem;
           padding: 1rem;
-          position: absolute;
           width: 100%;
           top: 100%;
           align-items: right;
@@ -31,7 +29,7 @@ const Footer = () => {
             }
           `}
         >
-          MERNG Comment. Todos los derechos Reservados 2020 &copy;
+          MERNG Comment App. Marlos Rodríguez Educational Project 2020 &copy;
         </p>
       </footer>
     </>

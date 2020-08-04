@@ -3,9 +3,10 @@ import styled from "@emotion/styled";
 
 const CommentsContainer = styled.div`
   width: 95%;
+  min-height: 500px;
   margin: 2rem auto 0 auto;
   padding: 30px 0;
-  background-color: #f2f2f2;
+  background-color: #f1f1f1;
 `;
 
 const Contenedor = styled.div`

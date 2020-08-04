@@ -1,6 +1,9 @@
 import React from "react";
+import Link from "next/link";
+
 import { css } from "@emotion/core";
 import styled from "@emotion/styled";
+import moment from "moment";
 
 const CommentCard = styled.div`
   min-width: 400px;
@@ -12,8 +15,8 @@ const CommentCard = styled.div`
   -webkit-box-shadow: 10px 10px 30px #0000001e;
   box-shadow: 10px 10px 30px #0000001e;
   border-radius: 1rem;
-  padding: 1rem;
-
+  padding: 1.5rem 1rem 1rem 1rem;
+  background-color: #ffffff;
   &:hover {
     transform: translateY(-10px);
   }
@@ -21,7 +24,6 @@ const CommentCard = styled.div`
 const CommentCardContent = styled.div`
   width: 100%;
   text-align: center;
-  padding-bottom: 10px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -52,7 +54,7 @@ const Button = styled.a`
   font-weight: 700;
   border: 1px solid #d1d1d1;
   padding: 0.5rem 1rem;
-  margin: 0 1rem;
+  margin: 0 0.5rem;
   text-align: center;
   margin-right: 2rem;
   background-color: white;
@@ -67,51 +69,71 @@ const Button = styled.a`
   }
 `;
 
-const PostCard = ({ post: { body, username } }) => {
+const CardUser = styled.p`
+  margin-right: auto;
+  margin-bottom: 0;
+  width: 90%;
+  color: #1457ff;
+  font-weight: bold;
+`;
+
+const CardImage = styled.img`
+  width: 50px;
+  height: 50px;
+  margin-right: auto;
+  display: inline-flex;
+  align-self: left;
+  margin: auto 1rem;
+  top: 50%;
+`;
+
+const PostCard = ({
+  post: { id, body, username, createAt, commentCount, likeCount },
+}) => {
+  const CommentOnPost = () => {
+    console.log("Comment");
+  };
+
+  const LikePost = () => {
+    console.log("Like");
+  };
+
   return (
     <CommentCard>
       <CommentCardContent>
         <div>
-          <img
-            src=""
-            css={css`
-              width: 50px;
-              height: 50px;
-              margin-right: auto;
-              display: inline-flex;
-              align-self: left;
-              margin: auto 1rem;
-              top: 50%;
-            `}
-          />
-          <p
-            css={css`
-              padding: 1.6rem 1rem 0 1rem;
-            `}
-          >
-            {body}
-          </p>
+          <CardImage src="/avatar.png" />
+          <Link href="/post/[id]" as={`/post/${id}`}>
+            <p
+              css={css`
+                padding: 1rem 1rem 0 1rem;
+                cursor: pointer;
+              `}
+            >
+              {body}
+            </p>
+          </Link>
         </div>
-        <p
-          css={css`
-            margin-right: auto;
-            margin-bottom: 0;
-            width: 90%;
-            color: #1457ff;
-            font-weight: bold;
-          `}
-        >
-          {username}
-        </p>
+        <CardUser>{username}</CardUser>
         <div
           css={css`
             margin-left: auto;
-            width: 80%;
+            margin-bottom: 0.5rem;
+            width: 70%;
           `}
         >
-          <Button>Comments 0</Button>
-          <Button>Likes 0</Button>
+          <Button onClick={CommentOnPost}>Comments {commentCount}</Button>
+          <Button onClick={LikePost}>Likes {likeCount}</Button>
         </div>
+        <p
+          css={css`
+            margin-top: 1rem;
+            font-weight: lighter;
+            font-size: 1rem;
+          `}
+        >
+          {moment(createAt).fromNow()}
+        </p>
       </CommentCardContent>
     </CommentCard>
   );

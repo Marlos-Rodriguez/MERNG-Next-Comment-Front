@@ -7,7 +7,7 @@ import PostCard from "../Components/layout/postCard";
 import PostCardContainer from "../Components/UI/postCardContainer";
 
 const Home = () => {
-  const { loading, data, error } = useQuery(FETCH_POST_QUERY);
+  const { loading, data, error } = useQuery(FETCH_POSTS_QUERY);
 
   if (loading)
     return (
@@ -34,21 +34,15 @@ const Home = () => {
   );
 };
 
-const FETCH_POST_QUERY = gql`
+const FETCH_POSTS_QUERY = gql`
   {
     getPosts {
       id
       body
       username
-      comments {
-        id
-        username
-        body
-      }
-      likes {
-        id
-        username
-      }
+      commentCount
+      likeCount
+      createAt
     }
   }
 `;

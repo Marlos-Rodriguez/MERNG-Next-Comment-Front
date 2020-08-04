@@ -17,8 +17,8 @@ const ContenedorHeader = styled.div`
 `;
 
 const Logo = styled.a`
-  color: var(--naranja);
-  font-size: 4rem;
+  color: #ffffff;
+  font-size: 3rem;
   line-height: 0;
   font-weight: 700;
   font-family: "Roboto Slab", serif;
@@ -34,6 +34,7 @@ const Header = () => {
       css={css`
         border-bottom: 2px solid var(--gris3);
         padding: 1rem 0;
+        background-color: rgba(16, 21, 28);
       `}
     >
       <ContenedorHeader>
@@ -44,7 +45,7 @@ const Header = () => {
           `}
         >
           <Link href="/">
-            <Logo>P</Logo>
+            <Logo>Comments</Logo>
           </Link>
         </div>
         <div
@@ -57,7 +58,7 @@ const Header = () => {
             <Boton bgColor="true">Login</Boton>
           </Link>
           <Link href="/register">
-            <Boton>Crear Cuenta</Boton>
+            <Boton>Register</Boton>
           </Link>
         </div>
       </ContenedorHeader>
