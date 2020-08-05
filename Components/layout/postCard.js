@@ -9,6 +9,7 @@ const CommentCard = styled.div`
   min-width: 400px;
   max-width: 600px;
   width: 15%;
+  height: 100%;
   margin: 30px auto;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -17,9 +18,6 @@ const CommentCard = styled.div`
   border-radius: 1rem;
   padding: 1.5rem 1rem 1rem 1rem;
   background-color: #ffffff;
-  &:hover {
-    transform: translateY(-10px);
-  }
 `;
 const CommentCardContent = styled.div`
   width: 100%;
@@ -102,7 +100,7 @@ const PostCard = ({
     <CommentCard>
       <CommentCardContent>
         <div>
-          <CardImage src="/avatar.png" />
+          <CardImage src="/avatar.svg" alt="Avatar Image" />
           <Link href="/post/[id]" as={`/post/${id}`}>
             <p
               css={css`

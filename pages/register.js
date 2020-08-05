@@ -7,47 +7,44 @@ import gql from "graphql-tag";
 import Layout from "../Components/layout/layout";
 import { Formulario, Campo, InputSubmit, Error } from "../Components/UI/form";
 
+import { useForm } from "../util/hooks";
+
 const Register = () => {
   //Errors State
   const [errors, setErrors] = useState({});
 
-  //New user State
-  const [values, setValues] = useState({
+  const { onChange, onSubmit, values } = useForm(RegisterUser, {
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
 
-  const onChange = (e) => {
-    setValues({
-      ...values,
-      [e.target.name]: e.target.value,
-    });
-  };
-
   //Register new User
   const [addUser, { loading }] = useMutation(REGISTER_USER, {
     update(proxy, result) {
-      console.log(result);
       Router.push("/");
     },
     onError(err) {
-      console.log(err.graphQLErrors[0].extensions.exception.errors);
       setErrors(err.graphQLErrors[0].extensions.exception.errors);
     },
     variables: values,
   });
 
-  const onSubmit = (e) => {
-    e.preventDefault();
+  function RegisterUser() {
     addUser();
-  };
+  }
 
   return (
     <Layout>
       <>
-        <Formulario onSubmit={onSubmit} noValidate>
+        <Formulario
+          onSubmit={onSubmit}
+          noValidate
+          css={css`
+            margin: 6rem auto;
+          `}
+        >
           <h1
             css={css`
               text-align: center;
