@@ -51,26 +51,6 @@ const CommentCardContent = styled.div`
   }
 `;
 
-const Button = styled.a`
-  display: flex;
-  font-weight: 700;
-  border: 1px solid #d1d1d1;
-  padding: 0.5rem 1rem;
-  margin: 0 0.5rem;
-  text-align: center;
-  margin-right: 2rem;
-  background-color: white;
-  color: #000;
-  align-self: right;
-
-  &:hover {
-    cursor: pointer;
-  }
-  &:first-of-type {
-    margin-left: auto;
-  }
-`;
-
 const CardUser = styled.p`
   margin-right: auto;
   margin-bottom: 0;
@@ -93,6 +73,67 @@ const CardImage = styled.img`
   top: 50%;
 `;
 
+//Comments and Likes
+const CommentTitleContainer = styled.div`
+  min-width: 500px;
+  max-width: 800px;
+  width: 95%;
+  display: flex;
+`;
+
+const LikeBox = styled.div`
+  margin: auto;
+  background-color: #ffffff;
+  padding: 0 3rem;
+  border: 1px solid #d1d1d1;
+  border-radius: 2rem;
+`;
+
+const HeartImg = styled.img`
+  margin: 1rem 0 0 0;
+  padding: 0;
+  height: 50px;
+`;
+
+const CommentContainer = styled.div`
+  min-width: 300px;
+  max-width: 600px;
+  width: 70%;
+  position: relative;
+  padding: 2rem;
+  right: 7%;
+  @media (max-width: 768px) {
+    right: 10%;
+  }
+`;
+
+const CommentContent = styled.div`
+  width: 100%;
+  position: relative;
+  background-color: #ffffff;
+  padding: 1rem 1rem 0 1rem;
+  margin-bottom: 2rem;
+  border-radius: 1rem;
+`;
+
+const CommentUser = styled.p`
+  width: 10%;
+  position: relative;
+  padding: 0;
+  margin: 0;
+  left: 0%;
+  color: #1457ff;
+  font-weight: bold;
+`;
+
+const CommentCreateAt = styled.p`
+  margin-top: 1rem;
+  font-weight: lighter;
+  font-size: 1rem;
+  padding: 0;
+  margin: 0;
+`;
+
 const Post = () => {
   //Routing para obtener el id actual
   const router = useRouter();
@@ -113,7 +154,14 @@ const Post = () => {
       </Layout>
     );
 
-  const { body, username, createAt, commentCount, likeCount } = data.getPost;
+  const {
+    body,
+    username,
+    createAt,
+    commentCount,
+    likeCount,
+    comments,
+  } = data.getPost;
 
   const CommentOnPost = () => {
     console.log("Comment");
@@ -122,6 +170,8 @@ const Post = () => {
   const LikePost = () => {
     console.log("Like");
   };
+
+  console.log(comments);
 
   return (
     <Layout>
@@ -155,6 +205,64 @@ const Post = () => {
               </p>
             </CommentCardContent>
           </CommentCard>
+          <CommentTitleContainer>
+            <div
+              css={css`
+                width: 80%;
+                align-items: flex-start;
+              `}
+            >
+              <h2>Comments: </h2>
+            </div>
+            <LikeBox>
+              <HeartImg src="/avatar.svg" />
+              <h3
+                css={css`
+                  margin: 0;
+                  padding: 0;
+                  font-weight: lighter;
+                `}
+              >
+                {likeCount}
+              </h3>
+            </LikeBox>
+          </CommentTitleContainer>
+          <CommentContainer>
+            <CommentContent>
+              <div
+                css={css`
+                  display: flex;
+                `}
+              >
+                <img
+                  src="/avatar.svg"
+                  alt="Avatar Image"
+                  css={css`
+                    width: 50px;
+                  `}
+                />
+
+                <p
+                  css={css`
+                    padding: 1rem 1rem 0 1rem;
+                    margin: 0;
+                  `}
+                >
+                  {body}
+                </p>
+              </div>
+              <CommentUser>{username}</CommentUser>
+              <div
+                css={css`
+                  width: 100%;
+                  padding: 0;
+                  margin: 0;
+                `}
+              >
+                <CommentCreateAt>{moment(createAt).fromNow()}</CommentCreateAt>
+              </div>
+            </CommentContent>
+          </CommentContainer>
         </PostCardContainer>
       )}
     </Layout>
@@ -167,8 +275,13 @@ const FETCH_POST_QUERY = gql`
       body
       username
       createAt
-      commentCount
       likeCount
+      commentCount
+      comments {
+        username
+        body
+        createAt
+      }
     }
   }
 `;
