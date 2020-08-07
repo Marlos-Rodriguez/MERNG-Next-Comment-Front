@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Router from "next/router";
 import { css } from "@emotion/core";
 import { useMutation } from "@apollo/react-hooks";
@@ -8,8 +8,10 @@ import Layout from "../Components/layout/layout";
 import { Formulario, Campo, InputSubmit, Error } from "../Components/UI/form";
 
 import { useForm } from "../util/hooks";
+import { AuthContext } from "../context/auth";
 
 const Login = () => {
+  const context = useContext(AuthContext);
   //Errors State
   const [errors, setErrors] = useState({});
 
@@ -19,7 +21,8 @@ const Login = () => {
   });
 
   const [loginUser, { loading }] = useMutation(LOGIN_USER, {
-    update(proxy, result) {
+    update(proxy, { data: { login: userData } }) {
+      context.login(userData);
       Router.push("/");
     },
     onError(err) {
@@ -50,7 +53,7 @@ const Login = () => {
             Login
           </h1>
           <Campo>
-            <label htmlFor="username">UserName</label>
+            <label htmlFor="username">User Name</label>
             <input
               type="text"
               id="username"

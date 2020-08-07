@@ -17,6 +17,10 @@ const Button = styled.a`
   &:hover {
     cursor: pointer;
   }
+  @media (max-width: 768px) {
+    margin: 2rem 1rem;
+    align-self: center;
+  }
 `;
 
 export default Button;

@@ -8,8 +8,11 @@ import Layout from "../Components/layout/layout";
 import { Formulario, Campo, InputSubmit, Error } from "../Components/UI/form";
 
 import { useForm } from "../util/hooks";
+import { AuthContext } from "../context/auth";
 
 const Register = () => {
+  //Auth Context
+  const context = useContext(AuthContext);
   //Errors State
   const [errors, setErrors] = useState({});
 
@@ -22,7 +25,8 @@ const Register = () => {
 
   //Register new User
   const [addUser, { loading }] = useMutation(REGISTER_USER, {
-    update(proxy, result) {
+    update(proxy, { data: { register: userData } }) {
+      context.login(userData);
       Router.push("/");
     },
     onError(err) {

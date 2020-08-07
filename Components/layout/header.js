@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import Link from "next/link";
 
 import styled from "@emotion/styled";
 import { css } from "@emotion/core";
 
 import Boton from "../UI/Button";
+
+import { AuthContext } from "../../context/auth";
 
 const ContenedorHeader = styled.div`
   max-width: 1200px;
@@ -23,12 +25,41 @@ const Logo = styled.a`
   font-weight: 700;
   font-family: "Roboto Slab", serif;
   margin-right: 2rem;
+
+  @media (max-width: 768px) {
+    position: relative;
+    align-self: center;
+    margin: 0 auto;
+  }
+
   &:hover {
     cursor: pointer;
   }
 `;
 
+const LogoContainer = styled.div`
+  display: flex;
+  align-items: center;
+  @media (max-width: 768px) {
+    padding: 3rem;
+    width: 100%;
+    align-items: center;
+  }
+`;
+
+const ButtonsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  @media (max-width: 768px) {
+    width: 100%;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+  }
+`;
+
 const Header = () => {
+  const { user, logout } = useContext(AuthContext);
   return (
     <header
       css={css`
@@ -38,29 +69,41 @@ const Header = () => {
       `}
     >
       <ContenedorHeader>
-        <div
-          css={css`
-            display: flex;
-            align-items: center;
-          `}
-        >
+        <LogoContainer>
           <Link href="/">
             <Logo>Comments</Logo>
           </Link>
-        </div>
-        <div
-          css={css`
-            display: flex;
-            align-items: center;
-          `}
-        >
-          <Link href="/login">
-            <Boton bgColor="true">Login</Boton>
-          </Link>
-          <Link href="/register">
-            <Boton>Register</Boton>
-          </Link>
-        </div>
+        </LogoContainer>
+        <ButtonsContainer>
+          {user ? (
+            <>
+              {" "}
+              <h3
+                css={css`
+                  margin: 1rem 2rem;
+                  color: white;
+                  font-weight: bold;
+                  letter-spacing: 1px;
+                `}
+              >
+                {user.username}
+              </h3>{" "}
+              <Link href="/new">
+                <Boton bgColor="true">New Post</Boton>
+              </Link>
+              <Boton onClick={logout}>Logout</Boton>
+            </>
+          ) : (
+            <>
+              <Link href="/login">
+                <Boton bgColor="true">Login</Boton>
+              </Link>
+              <Link href="/register">
+                <Boton>Register</Boton>
+              </Link>
+            </>
+          )}
+        </ButtonsContainer>
       </ContenedorHeader>
     </header>
   );

@@ -6,9 +6,9 @@ import styled from "@emotion/styled";
 import moment from "moment";
 
 const CommentCard = styled.div`
-  min-width: 400px;
-  max-width: 600px;
-  width: 15%;
+  min-width: 290px;
+  max-width: 400px;
+  width: 95%;
   height: 100%;
   margin: 30px auto;
   -webkit-box-sizing: border-box;
@@ -120,7 +120,10 @@ const PostCard = ({
             width: 70%;
           `}
         >
-          <Button onClick={CommentOnPost}>Comments {commentCount}</Button>
+          <Link href="/post/[id]" as={`/post/${id}`}>
+            <Button onClick={CommentOnPost}>Comments {commentCount}</Button>
+          </Link>
+
           <Button onClick={LikePost}>Likes {likeCount}</Button>
         </div>
         <p

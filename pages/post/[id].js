@@ -9,9 +9,10 @@ import moment from "moment";
 
 import Layout from "../../Components/layout/layout";
 import PostCardContainer from "../../Components/UI/postCardContainer";
+import CommentCardContainer from "../../Components/layout/commentCard";
 
 const CommentCard = styled.div`
-  min-width: 500px;
+  min-width: 280px;
   max-width: 800px;
   width: 95%;
   -webkit-box-sizing: border-box;
@@ -75,7 +76,7 @@ const CardImage = styled.img`
 
 //Comments and Likes
 const CommentTitleContainer = styled.div`
-  min-width: 500px;
+  min-width: 300px;
   max-width: 800px;
   width: 95%;
   display: flex;
@@ -92,46 +93,25 @@ const LikeBox = styled.div`
 const HeartImg = styled.img`
   margin: 1rem 0 0 0;
   padding: 0;
-  height: 50px;
+  width: 30px;
 `;
 
 const CommentContainer = styled.div`
   min-width: 300px;
-  max-width: 600px;
+  max-width: 700px;
   width: 70%;
   position: relative;
   padding: 2rem;
-  right: 7%;
+  right: 14%;
+  @media (max-width: 1024px) {
+    right: 7%;
+  }
   @media (max-width: 768px) {
     right: 10%;
   }
-`;
-
-const CommentContent = styled.div`
-  width: 100%;
-  position: relative;
-  background-color: #ffffff;
-  padding: 1rem 1rem 0 1rem;
-  margin-bottom: 2rem;
-  border-radius: 1rem;
-`;
-
-const CommentUser = styled.p`
-  width: 10%;
-  position: relative;
-  padding: 0;
-  margin: 0;
-  left: 0%;
-  color: #1457ff;
-  font-weight: bold;
-`;
-
-const CommentCreateAt = styled.p`
-  margin-top: 1rem;
-  font-weight: lighter;
-  font-size: 1rem;
-  padding: 0;
-  margin: 0;
+  @media (max-width: 375px) {
+    right: 0;
+  }
 `;
 
 const Post = () => {
@@ -170,8 +150,6 @@ const Post = () => {
   const LikePost = () => {
     console.log("Like");
   };
-
-  console.log(comments);
 
   return (
     <Layout>
@@ -215,10 +193,10 @@ const Post = () => {
               <h2>Comments: </h2>
             </div>
             <LikeBox>
-              <HeartImg src="/avatar.svg" />
+              <HeartImg src="/heart.svg" alt="Heart Image" />
               <h3
                 css={css`
-                  margin: 0;
+                  margin: 0 0 1rem 0;
                   padding: 0;
                   font-weight: lighter;
                 `}
@@ -228,40 +206,15 @@ const Post = () => {
             </LikeBox>
           </CommentTitleContainer>
           <CommentContainer>
-            <CommentContent>
-              <div
-                css={css`
-                  display: flex;
-                `}
-              >
-                <img
-                  src="/avatar.svg"
-                  alt="Avatar Image"
-                  css={css`
-                    width: 50px;
-                  `}
-                />
-
-                <p
-                  css={css`
-                    padding: 1rem 1rem 0 1rem;
-                    margin: 0;
-                  `}
-                >
-                  {body}
-                </p>
-              </div>
-              <CommentUser>{username}</CommentUser>
-              <div
-                css={css`
-                  width: 100%;
-                  padding: 0;
-                  margin: 0;
-                `}
-              >
-                <CommentCreateAt>{moment(createAt).fromNow()}</CommentCreateAt>
-              </div>
-            </CommentContent>
+            {commentCount > 0 ? (
+              comments.map((comment) => {
+                return (
+                  <CommentCardContainer key={comment.id} comment={comment} />
+                );
+              })
+            ) : (
+              <h2>No Comments</h2>
+            )}
           </CommentContainer>
         </PostCardContainer>
       )}
@@ -278,6 +231,7 @@ const FETCH_POST_QUERY = gql`
       likeCount
       commentCount
       comments {
+        id
         username
         body
         createAt
