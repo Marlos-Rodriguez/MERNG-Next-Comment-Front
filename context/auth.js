@@ -1,4 +1,5 @@
-import React, { useReducer, createContext } from "react";
+import React, { useReducer, createContext, useContext, useEffect } from "react";
+import Router, { useRouter } from "next/router";
 import jwtDecode from "jwt-decode";
 
 const initialState = {
@@ -72,3 +73,35 @@ function AuthProvider(props) {
 }
 
 export { AuthContext, AuthProvider };
+
+function useAuth() {
+  const context = useContext(AuthContext);
+
+  return context;
+}
+
+export function ProtectRoute(Component) {
+  return () => {
+    const { user } = useAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+      if (!user) Router.push("/login");
+    }, [user]);
+
+    return <Component {...arguments} />;
+  };
+}
+
+export function ProtectAuthPages(Component) {
+  return () => {
+    const { user } = useAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+      if (user) Router.push("/");
+    }, [user]);
+
+    return <Component {...arguments} />;
+  };
+}

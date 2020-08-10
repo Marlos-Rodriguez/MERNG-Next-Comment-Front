@@ -71,7 +71,7 @@ const Header = () => {
       <ContenedorHeader>
         <LogoContainer>
           <Link href="/">
-            <Logo>Comments</Logo>
+            <Logo>Posts</Logo>
           </Link>
         </LogoContainer>
         <ButtonsContainer>

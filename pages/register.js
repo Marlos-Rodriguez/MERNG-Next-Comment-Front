@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Router from "next/router";
 import { css } from "@emotion/core";
 import { useMutation } from "@apollo/react-hooks";
@@ -8,7 +8,7 @@ import Layout from "../Components/layout/layout";
 import { Formulario, Campo, InputSubmit, Error } from "../Components/UI/form";
 
 import { useForm } from "../util/hooks";
-import { AuthContext } from "../context/auth";
+import { AuthContext, ProtectAuthPages } from "../context/auth";
 
 const Register = () => {
   //Auth Context
@@ -141,4 +141,4 @@ const REGISTER_USER = gql`
   }
 `;
 
-export default Register;
+export default ProtectAuthPages(Register);
