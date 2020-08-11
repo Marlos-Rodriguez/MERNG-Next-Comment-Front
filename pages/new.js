@@ -1,4 +1,6 @@
 import React from "react";
+import { useMutation } from "@apollo/react-hooks";
+import gql from "graphql-tag";
 
 import { css } from "@emotion/core";
 import styled from "@emotion/styled";
@@ -18,12 +20,19 @@ const FormContainer = styled.div`
 `;
 
 const NewPost = () => {
-  const { onChange, onSubmit, values } = useForm(CreatePost, {
-    post: "",
+  const { values, onChange, onSubmit } = useForm(createPostCallback, {
+    body: "",
   });
 
-  function CreatePost() {
-    console.log(values);
+  const [createPost, { error }] = useMutation(CREATE_POST_MUTATION, {
+    variables: values,
+    update(proxy, result) {
+      console.log(result);
+    },
+  });
+
+  function createPostCallback() {
+    createPost();
   }
   return (
     <Layout>
@@ -69,5 +78,29 @@ const NewPost = () => {
     </Layout>
   );
 };
+
+const CREATE_POST_MUTATION = gql`
+  mutation createPost($body: String!) {
+    createPost(body: $body) {
+      id
+      body
+      createdAt
+      username
+      likes {
+        id
+        username
+        createdAt
+      }
+      likeCount
+      comments {
+        id
+        body
+        username
+        createdAt
+      }
+      commentCount
+    }
+  }
+`;
 
 export default ProtectRoute(NewPost);
