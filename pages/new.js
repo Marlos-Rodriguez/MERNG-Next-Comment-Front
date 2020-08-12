@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import Router from "next/router";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
@@ -10,6 +11,8 @@ import { useForm } from "../util/hooks";
 import { ProtectRoute } from "../context/auth";
 import { Formulario, Campo, InputSubmit, Error } from "../Components/UI/form";
 
+import { FETCH_POSTS_QUERY } from "../util/graphql";
+
 const FormContainer = styled.div`
   min-height: 500px;
   height: 100%;
@@ -20,15 +23,27 @@ const FormContainer = styled.div`
 `;
 
 const NewPost = () => {
+  const [errors, setErrors] = useState({});
+
   const { values, onChange, onSubmit } = useForm(createPostCallback, {
     body: "",
   });
 
   const [createPost, { error }] = useMutation(CREATE_POST_MUTATION, {
-    variables: values,
     update(proxy, result) {
-      console.log(result);
+      const data = proxy.readQuery({
+        query: FETCH_POSTS_QUERY,
+      });
+      data.getPosts = [result.data.createPost, ...data.getPosts];
+      proxy.writeQuery({ query: FETCH_POSTS_QUERY, data });
+      values.body = "";
+      Router.push("/");
     },
+    onError(err) {
+      setErrors(err);
+      console.log(err);
+    },
+    variables: values,
   });
 
   function createPostCallback() {
@@ -64,13 +79,20 @@ const NewPost = () => {
                 Post
               </label>
               <textarea
-                id="post"
+                id="body"
                 placeholder="Post Content"
-                name="post"
+                name="body"
                 value={values.post}
                 onChange={onChange}
               />
             </Campo>
+            {Object.keys(errors).length > 0 && (
+              <div>
+                {Object.values(errors).map((value) => {
+                  return <Error key={value}>{value}</Error>;
+                })}
+              </div>
+            )}
             <InputSubmit type="submit" value="Create Post" />
           </Formulario>
         </FormContainer>
@@ -84,21 +106,10 @@ const CREATE_POST_MUTATION = gql`
     createPost(body: $body) {
       id
       body
-      createdAt
       username
-      likes {
-        id
-        username
-        createdAt
-      }
-      likeCount
-      comments {
-        id
-        body
-        username
-        createdAt
-      }
       commentCount
+      likeCount
+      createAt
     }
   }
 `;

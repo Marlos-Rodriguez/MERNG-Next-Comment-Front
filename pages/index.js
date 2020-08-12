@@ -1,10 +1,10 @@
 import React from "react";
 import { useQuery } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 
 import Layout from "../Components/layout/layout";
 import PostCard from "../Components/layout/postCard";
 import PostCardContainer from "../Components/UI/postCardContainer";
+import { FETCH_POSTS_QUERY } from "../util/graphql";
 
 const Home = () => {
   const { loading, data, error } = useQuery(FETCH_POSTS_QUERY);
@@ -33,18 +33,5 @@ const Home = () => {
     </Layout>
   );
 };
-
-const FETCH_POSTS_QUERY = gql`
-  {
-    getPosts {
-      id
-      body
-      username
-      commentCount
-      likeCount
-      createAt
-    }
-  }
-`;
 
 export default Home;
