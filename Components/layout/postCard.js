@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import Link from "next/link";
 
 import { css } from "@emotion/core";
@@ -50,9 +50,8 @@ const CommentCardContent = styled.div`
 const Button = styled.a`
   display: flex;
   font-weight: 700;
-  border: 1px solid #d1d1d1;
-  padding: 0.5rem 1rem;
-  margin: 0 0.5rem;
+  padding: 0.5rem 0;
+  margin: 0;
   text-align: center;
   margin-right: 2rem;
   background-color: white;
@@ -121,10 +120,29 @@ const PostCard = ({
           `}
         >
           <Link href="/post/[id]" as={`/post/${id}`}>
-            <Button onClick={CommentOnPost}>Comments {commentCount}</Button>
+            <Button>
+              <img
+                src="/comment.svg"
+                css={css`
+                  width: 25px;
+                  padding-top: 3px;
+                  margin-right: 1rem;
+                `}
+              />{" "}
+              {commentCount}
+            </Button>
           </Link>
 
-          <Button onClick={LikePost}>Likes {likeCount}</Button>
+          <Button onClick={LikePost}>
+            <img
+              src="/heart.svg"
+              css={css`
+                width: 25px;
+                margin-right: 1rem;
+              `}
+            />{" "}
+            {likeCount}
+          </Button>
         </div>
         <p
           css={css`

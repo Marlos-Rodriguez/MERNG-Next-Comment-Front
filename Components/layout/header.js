@@ -6,7 +6,7 @@ import { css } from "@emotion/core";
 
 import Boton from "../UI/Button";
 
-import { AuthContext } from "../../context/auth";
+import AuthContext from "../../context/auth/authContext";
 
 const ContenedorHeader = styled.div`
   max-width: 1200px;

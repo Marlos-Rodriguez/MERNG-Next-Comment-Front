@@ -2,13 +2,15 @@ import React, { useContext, useState } from "react";
 import Router from "next/router";
 import { css } from "@emotion/core";
 import { useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 
 import Layout from "../Components/layout/layout";
 import { Formulario, Campo, InputSubmit, Error } from "../Components/UI/form";
 
 import { useForm } from "../util/hooks";
-import { AuthContext, ProtectAuthPages } from "../context/auth";
+import { ProtectAuthPages } from "../context/auth/authRoutes";
+import { LOGIN_USER } from "../util/graphql";
+
+import AuthContext from "../context/auth/authContext";
 
 const Login = () => {
   const context = useContext(AuthContext);
@@ -22,7 +24,7 @@ const Login = () => {
 
   const [loginUser, { loading }] = useMutation(LOGIN_USER, {
     update(proxy, { data: { login: userData } }) {
-      context.login(userData);
+      context.Login(userData);
       Router.push("/");
     },
     onError(err) {
@@ -87,17 +89,5 @@ const Login = () => {
     </Layout>
   );
 };
-
-const LOGIN_USER = gql`
-  mutation login($username: String!, $password: String!) {
-    login(username: $username, password: $password) {
-      id
-      email
-      username
-      createAt
-      token
-    }
-  }
-`;
 
 export default ProtectAuthPages(Login);

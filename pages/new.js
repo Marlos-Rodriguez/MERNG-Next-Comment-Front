@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Router from "next/router";
 import { useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
+
+import { CREATE_POST_MUTATION } from "../util/graphql";
+
+import PostContext from "../context/post/postContext";
 
 import { css } from "@emotion/core";
 import styled from "@emotion/styled";
 
 import Layout from "../Components/layout/layout";
 import { useForm } from "../util/hooks";
-import { ProtectRoute } from "../context/auth";
+import { ProtectRoute } from "../context/auth/authRoutes";
 import { Formulario, Campo, InputSubmit, Error } from "../Components/UI/form";
-
-import { FETCH_POSTS_QUERY } from "../util/graphql";
 
 const FormContainer = styled.div`
   min-height: 500px;
@@ -23,6 +24,7 @@ const FormContainer = styled.div`
 `;
 
 const NewPost = () => {
+  const { AddPost } = useContext(PostContext);
   const [errors, setErrors] = useState({});
 
   const { values, onChange, onSubmit } = useForm(createPostCallback, {
@@ -30,12 +32,8 @@ const NewPost = () => {
   });
 
   const [createPost, { error }] = useMutation(CREATE_POST_MUTATION, {
-    update(proxy, result) {
-      const data = proxy.readQuery({
-        query: FETCH_POSTS_QUERY,
-      });
-      data.getPosts = [result.data.createPost, ...data.getPosts];
-      proxy.writeQuery({ query: FETCH_POSTS_QUERY, data });
+    update(_, result) {
+      AddPost(result.data.createPost);
       values.body = "";
       Router.push("/");
     },
@@ -47,7 +45,14 @@ const NewPost = () => {
   });
 
   function createPostCallback() {
-    createPost();
+    if (values.body.trim() === "") {
+      setErrors({
+        message: "Post Body must not be empty",
+      });
+    } else {
+      createPost();
+      setErrors({});
+    }
   }
   return (
     <Layout>
@@ -86,13 +91,7 @@ const NewPost = () => {
                 onChange={onChange}
               />
             </Campo>
-            {Object.keys(errors).length > 0 && (
-              <div>
-                {Object.values(errors).map((value) => {
-                  return <Error key={value}>{value}</Error>;
-                })}
-              </div>
-            )}
+            {Object.keys(errors).length > 0 && <Error>{errors.message}</Error>}
             <InputSubmit type="submit" value="Create Post" />
           </Formulario>
         </FormContainer>
@@ -100,18 +99,5 @@ const NewPost = () => {
     </Layout>
   );
 };
-
-const CREATE_POST_MUTATION = gql`
-  mutation createPost($body: String!) {
-    createPost(body: $body) {
-      id
-      body
-      username
-      commentCount
-      likeCount
-      createAt
-    }
-  }
-`;
 
 export default ProtectRoute(NewPost);

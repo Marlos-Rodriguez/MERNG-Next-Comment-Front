@@ -1,7 +1,6 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 
 import { css } from "@emotion/core";
 import styled from "@emotion/styled";
@@ -10,6 +9,8 @@ import moment from "moment";
 import Layout from "../../Components/layout/layout";
 import PostCardContainer from "../../Components/UI/postCardContainer";
 import CommentCardContainer from "../../Components/layout/commentCard";
+
+import { FETCH_POST_QUERY } from "../../util/graphql";
 
 const CommentCard = styled.div`
   min-width: 280px;
@@ -86,7 +87,6 @@ const LikeBox = styled.div`
   margin: auto;
   background-color: #ffffff;
   padding: 0 3rem;
-  border: 1px solid #d1d1d1;
   border-radius: 2rem;
 `;
 
@@ -221,23 +221,5 @@ const Post = () => {
     </Layout>
   );
 };
-
-const FETCH_POST_QUERY = gql`
-  query($postId: ID!) {
-    getPost(postId: $postId) {
-      body
-      username
-      createAt
-      likeCount
-      commentCount
-      comments {
-        id
-        username
-        body
-        createAt
-      }
-    }
-  }
-`;
 
 export default Post;

@@ -2,13 +2,16 @@ import React, { useState, useContext } from "react";
 import Router from "next/router";
 import { css } from "@emotion/core";
 import { useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 
 import Layout from "../Components/layout/layout";
 import { Formulario, Campo, InputSubmit, Error } from "../Components/UI/form";
 
 import { useForm } from "../util/hooks";
-import { AuthContext, ProtectAuthPages } from "../context/auth";
+import { ProtectAuthPages } from "../context/auth/authRoutes";
+
+import AuthContext from "../context/auth/authContext";
+
+import { REGISTER_USER } from "../util/graphql";
 
 const Register = () => {
   //Auth Context
@@ -26,7 +29,7 @@ const Register = () => {
   //Register new User
   const [addUser, { loading }] = useMutation(REGISTER_USER, {
     update(proxy, { data: { register: userData } }) {
-      context.login(userData);
+      context.Login(userData);
       Router.push("/");
     },
     onError(err) {
@@ -117,28 +120,5 @@ const Register = () => {
     </Layout>
   );
 };
-
-const REGISTER_USER = gql`
-  mutation register(
-    $username: String!
-    $email: String!
-    $password: String!
-    $confirmPassword: String!
-  ) {
-    register(
-      registerInput: {
-        username: $username
-        email: $email
-        password: $password
-        confirmPassword: $confirmPassword
-      }
-    ) {
-      id
-      email
-      username
-      token
-    }
-  }
-`;
 
 export default ProtectAuthPages(Register);
