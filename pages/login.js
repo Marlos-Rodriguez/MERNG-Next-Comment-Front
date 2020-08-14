@@ -59,7 +59,7 @@ const Login = () => {
             <input
               type="text"
               id="username"
-              placeholder="Username"
+              placeholder="&#x1F464; Username"
               name="username"
               value={values.username}
               onChange={onChange}
@@ -70,7 +70,7 @@ const Login = () => {
             <input
               type="password"
               id="password"
-              placeholder="Password"
+              placeholder="&#8226;&#8226;&#8226; Password"
               name="password"
               value={values.password}
               onChange={onChange}

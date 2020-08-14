@@ -59,7 +59,7 @@ const ButtonsContainer = styled.div`
 `;
 
 const Header = () => {
-  const { user, logout } = useContext(AuthContext);
+  const { user, Logout } = useContext(AuthContext);
   return (
     <header
       css={css`
@@ -91,7 +91,7 @@ const Header = () => {
               <Link href="/new">
                 <Boton bgColor="true">New Post</Boton>
               </Link>
-              <Boton onClick={logout}>Logout</Boton>
+              <Boton onClick={Logout}>Logout</Boton>
             </>
           ) : (
             <>

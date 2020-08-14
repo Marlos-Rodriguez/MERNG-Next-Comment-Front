@@ -49,6 +49,10 @@ const NewPost = () => {
       setErrors({
         message: "Post Body must not be empty",
       });
+    } else if (values.body.length > 450) {
+      setErrors({
+        message: "Post Body is too long, less of 450 characters",
+      });
     } else {
       createPost();
       setErrors({});

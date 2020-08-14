@@ -64,7 +64,7 @@ const Register = () => {
             <input
               type="text"
               id="username"
-              placeholder="Username"
+              placeholder="&#x1F464; Username"
               name="username"
               value={values.username}
               onChange={onChange}
@@ -76,7 +76,7 @@ const Register = () => {
             <input
               type="email"
               id="email"
-              placeholder="Email"
+              placeholder="&#x2709; Email"
               name="email"
               value={values.email}
               onChange={onChange}
@@ -88,7 +88,7 @@ const Register = () => {
             <input
               type="password"
               id="password"
-              placeholder="Password"
+              placeholder="&#8226;&#8226;&#8226; Password"
               name="password"
               value={values.password}
               onChange={onChange}
@@ -100,7 +100,7 @@ const Register = () => {
             <input
               type="password"
               id="confirmPassword"
-              placeholder="Confirm Password"
+              placeholder="&#8226;&#8226;&#8226; Confirm Password"
               name="confirmPassword"
               value={values.confirmPassword}
               onChange={onChange}

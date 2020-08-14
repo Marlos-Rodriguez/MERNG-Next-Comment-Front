@@ -43,7 +43,6 @@ const CommentCardContent = styled.div`
 
   div {
     display: inline-flex;
-    width: 100%;
   }
 `;
 
@@ -66,22 +65,34 @@ const Button = styled.a`
   }
 `;
 
-const CardUser = styled.p`
-  margin-right: auto;
-  margin-bottom: 0;
-  width: 90%;
-  color: #1457ff;
+const CardUserInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 50px;
+  margin: 0;
+  padding: 0;
+`;
+
+const CardUserName = styled.p`
+  text-align: center;
+  align-self: center;
   font-weight: bold;
+  font-size: 1.8rem;
+  color: #1457ff;
 `;
 
 const CardImage = styled.img`
   width: 50px;
   height: 50px;
-  margin-right: auto;
-  display: inline-flex;
-  align-self: left;
-  margin: auto 1rem;
-  top: 50%;
+  margin: 0;
+  margin-top: 1.5rem;
+  padding: 0;
+`;
+
+const CardBody = styled.p`
+  padding: 1rem;
+  cursor: pointer;
+  width: 86%;
 `;
 
 const PostCard = ({
@@ -98,20 +109,20 @@ const PostCard = ({
   return (
     <CommentCard>
       <CommentCardContent>
-        <div>
-          <CardImage src="/avatar.svg" alt="Avatar Image" />
+        <div
+          css={css`
+            width: 100%;
+            padding-left: 1rem;
+          `}
+        >
+          <CardUserInfo>
+            <CardImage src="/avatar.svg" alt="Avatar Image" />
+            <CardUserName>{username}</CardUserName>
+          </CardUserInfo>
           <Link href="/post/[id]" as={`/post/${id}`}>
-            <p
-              css={css`
-                padding: 1rem 1rem 0 1rem;
-                cursor: pointer;
-              `}
-            >
-              {body}
-            </p>
+            <CardBody>{body}</CardBody>
           </Link>
         </div>
-        <CardUser>{username}</CardUser>
         <div
           css={css`
             margin-left: auto;
