@@ -5,7 +5,12 @@ import PostReducer from "./postReducer";
 import { useQuery } from "@apollo/react-hooks";
 import { FETCH_POSTS_QUERY } from "../../util/graphql";
 
-import { GET_POSTS, GET_POSTS_ERROR, ADD_POST } from "../../types/index";
+import {
+  GET_POSTS,
+  GET_POSTS_ERROR,
+  ADD_POST,
+  LIKE_POST,
+} from "../../types/index";
 
 const PostState = (props) => {
   const initialState = {
@@ -46,8 +51,6 @@ const PostState = (props) => {
       type: ADD_POST,
       payload: post,
     });
-
-    console.log(state.posts);
   };
 
   return (

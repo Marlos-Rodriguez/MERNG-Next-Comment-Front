@@ -5,6 +5,8 @@ import { css } from "@emotion/core";
 import styled from "@emotion/styled";
 import moment from "moment";
 
+import LinkButton from "./likeButton";
+
 const CommentCard = styled.div`
   min-width: 290px;
   max-width: 400px;
@@ -55,7 +57,6 @@ const Button = styled.a`
   margin-right: 2rem;
   background-color: white;
   color: #000;
-  align-self: right;
 
   &:hover {
     cursor: pointer;
@@ -96,16 +97,10 @@ const CardBody = styled.p`
 `;
 
 const PostCard = ({
-  post: { id, body, username, createAt, commentCount, likeCount },
+  post: { id, body, username, createAt, commentCount, likes, likeCount },
+  actualUser,
 }) => {
-  const CommentOnPost = () => {
-    console.log("Comment");
-  };
-
-  const LikePost = () => {
-    console.log("Like");
-  };
-
+  const LikeInfo = { id, username, likes, likeCount };
   return (
     <CommentCard>
       <CommentCardContent>
@@ -123,6 +118,7 @@ const PostCard = ({
             <CardBody>{body}</CardBody>
           </Link>
         </div>
+
         <div
           css={css`
             margin-left: auto;
@@ -140,21 +136,36 @@ const PostCard = ({
                   margin-right: 1rem;
                 `}
               />{" "}
-              {commentCount}
+              {actualUser && actualUser.username === username ? (
+                <p
+                  css={css`
+                    position: relative;
+                    top: 18%;
+                  `}
+                >
+                  {commentCount}
+                </p>
+              ) : (
+                commentCount
+              )}
             </Button>
           </Link>
-
-          <Button onClick={LikePost}>
-            <img
-              src="/heart.svg"
-              css={css`
-                width: 25px;
-                margin-right: 1rem;
-              `}
-            />{" "}
-            {likeCount}
-          </Button>
+          <LinkButton user={actualUser} post={LikeInfo} />
+          {actualUser && actualUser.username === username && (
+            <Button>
+              <p
+                css={css`
+                  color: red;
+                  font-size: 3rem;
+                `}
+              >
+                {" "}
+                &#128465;
+              </p>
+            </Button>
+          )}
         </div>
+
         <p
           css={css`
             margin-top: 1rem;

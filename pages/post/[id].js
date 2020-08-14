@@ -10,6 +10,8 @@ import Layout from "../../Components/layout/layout";
 import PostCardContainer from "../../Components/UI/postCardContainer";
 import CommentCardContainer from "../../Components/layout/commentCard";
 
+import PageLikeButton from "../../Components/layout/PageLikeButton";
+
 import { FETCH_POST_QUERY } from "../../util/graphql";
 
 const CommentCard = styled.div`
@@ -88,6 +90,7 @@ const LikeBox = styled.div`
   background-color: #ffffff;
   padding: 0 3rem;
   border-radius: 2rem;
+  cursor: pointer;
 `;
 
 const HeartImg = styled.img`
@@ -135,20 +138,20 @@ const Post = () => {
     );
 
   const {
+    id,
     body,
     username,
     createAt,
     commentCount,
     likeCount,
+    likes,
     comments,
   } = data.getPost;
 
+  const LikeInfo = { id, likes, likeCount };
+
   const CommentOnPost = () => {
     console.log("Comment");
-  };
-
-  const LikePost = () => {
-    console.log("Like");
   };
 
   return (
@@ -192,18 +195,7 @@ const Post = () => {
             >
               <h2>Comments: </h2>
             </div>
-            <LikeBox>
-              <HeartImg src="/heart.svg" alt="Heart Image" />
-              <h3
-                css={css`
-                  margin: 0 0 1rem 0;
-                  padding: 0;
-                  font-weight: lighter;
-                `}
-              >
-                {likeCount}
-              </h3>
-            </LikeBox>
+            <PageLikeButton post={LikeInfo} />
           </CommentTitleContainer>
           <CommentContainer>
             {commentCount > 0 ? (

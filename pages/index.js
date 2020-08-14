@@ -1,13 +1,16 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 
 import Layout from "../Components/layout/layout";
 import PostCard from "../Components/layout/postCard";
 import PostCardContainer from "../Components/UI/postCardContainer";
+
 import PostContext from "../context/post/postContext";
+import AuthContext from "../context/auth/authContext";
 
 const Home = () => {
   //Get Context Post State
-  const { posts, loadingPosts, errorPosts, newPost } = useContext(PostContext);
+  const { posts, loadingPosts, errorPosts } = useContext(PostContext);
+  const { user } = useContext(AuthContext);
 
   if (loadingPosts)
     return (
@@ -24,7 +27,7 @@ const Home = () => {
         <>
           <PostCardContainer>
             {posts.map((post) => {
-              return <PostCard key={post.id} post={post} />;
+              return <PostCard key={post.id} post={post} actualUser={user} />;
             })}
           </PostCardContainer>
         </>

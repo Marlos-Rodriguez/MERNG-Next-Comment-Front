@@ -8,6 +8,10 @@ export const FETCH_POSTS_QUERY = gql`
       username
       commentCount
       likeCount
+      likes {
+        id
+        username
+      }
       createAt
     }
   }
@@ -16,10 +20,15 @@ export const FETCH_POSTS_QUERY = gql`
 export const FETCH_POST_QUERY = gql`
   query($postId: ID!) {
     getPost(postId: $postId) {
+      id
       body
       username
       createAt
       likeCount
+      likes {
+        id
+        username
+      }
       commentCount
       comments {
         id
@@ -75,6 +84,17 @@ export const CREATE_POST_MUTATION = gql`
       commentCount
       likeCount
       createAt
+    }
+  }
+`;
+
+export const LIKE_POST_MUTATION = gql`
+  mutation likePost($postId: ID!) {
+    likePost(postId: $postId) {
+      likes {
+        username
+      }
+      likeCount
     }
   }
 `;
