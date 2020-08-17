@@ -89,7 +89,16 @@ const Header = () => {
                 {user.username}
               </h3>{" "}
               <Link href="/new">
-                <Boton bgColor="true">New Post</Boton>
+                <Boton
+                  bgColor="true"
+                  css={css`
+                    @media (max-width: 330px) {
+                      font-size: 1.5rem;
+                    }
+                  `}
+                >
+                  New Post
+                </Boton>
               </Link>
               <Boton onClick={Logout}>Logout</Boton>
             </>

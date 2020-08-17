@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/react-hooks";
 
@@ -9,8 +9,11 @@ import moment from "moment";
 import Layout from "../../Components/layout/layout";
 import PostCardContainer from "../../Components/UI/postCardContainer";
 import CommentCardContainer from "../../Components/layout/commentCard";
+import { InputSubmit, Error } from "../../Components/UI/form";
 
 import PageLikeButton from "../../Components/layout/PageLikeButton";
+
+import AuthContext from "../../context/auth/authContext";
 
 import { FETCH_POST_QUERY } from "../../util/graphql";
 
@@ -52,29 +55,18 @@ const CommentCardContent = styled.div`
   div {
     display: inline-flex;
     width: 100%;
-  }
-`;
-
-const CardUser = styled.p`
-  margin-right: auto;
-  margin-bottom: 0;
-  width: 89%;
-  color: #1457ff;
-  font-weight: bold;
-
-  @media (max-width: 768px) {
-    width: 85%;
+    @media (max-width: 425px) {
+      display: inline-block;
+    }
   }
 `;
 
 const CardImage = styled.img`
   width: 100px;
   height: 100px;
-  margin-right: auto;
-  display: inline-flex;
-  align-self: left;
-  margin: auto 1rem;
-  top: 50%;
+  margin: 0;
+  margin-top: 1.5rem;
+  padding: 0;
 `;
 
 //Comments and Likes
@@ -83,20 +75,6 @@ const CommentTitleContainer = styled.div`
   max-width: 800px;
   width: 95%;
   display: flex;
-`;
-
-const LikeBox = styled.div`
-  margin: auto;
-  background-color: #ffffff;
-  padding: 0 3rem;
-  border-radius: 2rem;
-  cursor: pointer;
-`;
-
-const HeartImg = styled.img`
-  margin: 1rem 0 0 0;
-  padding: 0;
-  width: 30px;
 `;
 
 const CommentContainer = styled.div`
@@ -117,12 +95,65 @@ const CommentContainer = styled.div`
   }
 `;
 
+const NewComment = styled.form`
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 1rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-box-shadow: 10px 10px 30px #0000001e;
+  box-shadow: 10px 10px 30px #0000001e;
+`;
+
+const NewCommentTextArea = styled.textarea`
+  width: 100%;
+  height: 7rem;
+  max-width: 90%;
+  max-height: 7rem;
+`;
+
+const InputNewComment = styled(InputSubmit)`
+  width: 20%;
+  font-size: 1.5rem;
+  text-transform: none;
+  padding: 1rem 0;
+  @media (max-width: 600px) {
+    width: 35%;
+  }
+`;
+
+const CardUserInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100px;
+  max-width: 100px;
+  margin: 0;
+  padding: 0;
+`;
+
+const CardUserName = styled.p`
+  text-align: center;
+  align-self: center;
+  font-weight: bold;
+  font-size: 1.8rem;
+  width: 100%;
+  position: relative;
+  left: 30%;
+  margin: 0 auto;
+  color: #1457ff;
+`;
+
 const Post = () => {
   //Routing para obtener el id actual
   const router = useRouter();
   const {
     query: { id: postId },
   } = router;
+
+  const { user } = useContext(AuthContext);
+  const [values, setValues] = useState({});
 
   const { loading, data, error } = useQuery(FETCH_POST_QUERY, {
     variables: {
@@ -137,6 +168,32 @@ const Post = () => {
       </Layout>
     );
 
+  if (error) {
+    return (
+      <Layout>
+        <h1>Error: {error.message}</h1>
+      </Layout>
+    );
+  }
+
+  const onChange = (e) => {
+    setValues({
+      ...values,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    console.log(values.comment);
+  };
+
+  if (!data)
+    return (
+      <Layout>
+        <h1>Post Not Found</h1>
+      </Layout>
+    );
   const {
     id,
     body,
@@ -150,65 +207,102 @@ const Post = () => {
 
   const LikeInfo = { id, likes, likeCount };
 
-  const CommentOnPost = () => {
-    console.log("Comment");
-  };
-
   return (
     <Layout>
       {error ? (
         <h1>Error: {error.message}</h1>
       ) : (
-        <PostCardContainer>
-          <CommentCard>
-            <CommentCardContent>
-              <div>
-                <CardImage src="/avatar.svg" alt="Avatar Image" />
+        <>
+          <PostCardContainer>
+            <CommentCard>
+              <CommentCardContent>
+                <div>
+                  <CardUserInfo>
+                    <CardImage src="/avatar.svg" alt="Avatar Image" />
+                    <CardUserName>{username}</CardUserName>
+                  </CardUserInfo>
+
+                  <p
+                    css={css`
+                      padding: 1rem 1rem 0 1rem;
+                    `}
+                  >
+                    {body}
+                  </p>
+                </div>
 
                 <p
                   css={css`
-                    padding: 1rem 1rem 0 1rem;
+                    margin-top: 1rem;
+                    font-weight: lighter;
+                    font-size: 1rem;
                   `}
                 >
-                  {body}
+                  {moment(createAt).fromNow()}
                 </p>
-              </div>
-              <CardUser>{username}</CardUser>
-
-              <p
+              </CommentCardContent>
+            </CommentCard>
+            <CommentTitleContainer>
+              <div
                 css={css`
-                  margin-top: 1rem;
-                  font-weight: lighter;
-                  font-size: 1rem;
+                  width: 80%;
+                  align-items: flex-start;
                 `}
               >
-                {moment(createAt).fromNow()}
-              </p>
-            </CommentCardContent>
-          </CommentCard>
-          <CommentTitleContainer>
-            <div
-              css={css`
-                width: 80%;
-                align-items: flex-start;
-              `}
-            >
-              <h2>Comments: </h2>
-            </div>
-            <PageLikeButton post={LikeInfo} />
-          </CommentTitleContainer>
-          <CommentContainer>
-            {commentCount > 0 ? (
-              comments.map((comment) => {
-                return (
-                  <CommentCardContainer key={comment.id} comment={comment} />
-                );
-              })
-            ) : (
-              <h2>No Comments</h2>
-            )}
-          </CommentContainer>
-        </PostCardContainer>
+                <h2>Comments: </h2>
+              </div>
+              <PageLikeButton post={LikeInfo} />
+            </CommentTitleContainer>
+            <CommentContainer>
+              {user && (
+                <NewComment onSubmit={onSubmit} noValidate>
+                  <h2>New Comment </h2>
+                  <NewCommentTextArea
+                    id="comment"
+                    placeholder="Comment"
+                    name="comment"
+                    value={values.comment}
+                    onChange={onChange}
+                  />
+                  <InputNewComment type="submit" value="Submit" />
+                </NewComment>
+              )}
+
+              {commentCount > 0 ? (
+                comments.map((comment) => {
+                  return (
+                    <CommentCardContainer key={comment.id} comment={comment} />
+                  );
+                })
+              ) : (
+                <h2>No Comments</h2>
+              )}
+            </CommentContainer>
+          </PostCardContainer>
+          <h2
+            css={css`
+              width: 30%;
+              text-align: center;
+              background-color: red;
+              color: white;
+              margin: 1rem auto;
+              border-radius: 0.7rem;
+              cursor: pointer;
+
+              @media (max-width: 500px) {
+                width: 35%;
+              }
+              @media (max-width: 400px) {
+                width: 40%;
+              }
+              @media (max-width: 320px) {
+                width: 45%;
+              }
+            `}
+          >
+            Delete Post
+          </h2>
+        </>
       )}
     </Layout>
   );
