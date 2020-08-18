@@ -55,6 +55,45 @@ const Layout = (props) => {
           img {
             max-width: 100%;
           }
+          .Alert-Button {
+            display: block;
+            font-weight: 700;
+            font-size: 2rem;
+            padding: 0.6rem 1.7rem;
+            margin: 2rem auto;
+            text-align: center;
+            border: none;
+            border-radius: 0.5rem;
+            background-color: #223254;
+            color: white;
+            &:hover {
+              cursor: pointer;
+            }
+            @media (max-width: 768px) {
+              margin: 2rem 1rem;
+              align-self: center;
+            }
+          }
+          .Alert-Button-Cancel {
+            display: block;
+            font-weight: 700;
+            font-size: 2rem;
+            padding: 0.6rem 1.7rem;
+            margin: 2rem auto;
+            text-align: center;
+            margin-right: auto;
+            border: none;
+            border-radius: 0.5rem;
+            background-color: #e81c1c;
+            color: white;
+            &:hover {
+              cursor: pointer;
+            }
+            @media (max-width: 768px) {
+              margin: 2rem 1rem;
+              align-self: center;
+            }
+          }
         `}
       />
       <Head>

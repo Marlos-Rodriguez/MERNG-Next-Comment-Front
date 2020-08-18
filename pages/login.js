@@ -23,7 +23,7 @@ const Login = () => {
   });
 
   const [loginUser, { loading }] = useMutation(LOGIN_USER, {
-    update(proxy, { data: { login: userData } }) {
+    update(_, { data: { login: userData } }) {
       context.Login(userData);
       Router.push("/");
     },

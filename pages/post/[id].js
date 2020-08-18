@@ -1,21 +1,23 @@
 import React, { useContext, useState } from "react";
+import Router from "next/router";
 import { useRouter } from "next/router";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 
 import { css } from "@emotion/core";
 import styled from "@emotion/styled";
+import Swal from "sweetalert2";
 import moment from "moment";
 
 import Layout from "../../Components/layout/layout";
 import PostCardContainer from "../../Components/UI/postCardContainer";
 import CommentCardContainer from "../../Components/layout/commentCard";
-import { InputSubmit, Error } from "../../Components/UI/form";
+import { InputSubmit } from "../../Components/UI/form";
 
 import PageLikeButton from "../../Components/layout/PageLikeButton";
 
 import AuthContext from "../../context/auth/authContext";
 
-import { FETCH_POST_QUERY } from "../../util/graphql";
+import { FETCH_POST_QUERY, DELETE_POST } from "../../util/graphql";
 
 const CommentCard = styled.div`
   min-width: 280px;
@@ -145,6 +147,26 @@ const CardUserName = styled.p`
   color: #1457ff;
 `;
 
+const DeleteButton = styled.h2`
+  width: 30%;
+  text-align: center;
+  background-color: red;
+  color: white;
+  margin: 1rem auto;
+  border-radius: 0.7rem;
+  cursor: pointer;
+
+  @media (max-width: 500px) {
+    width: 35%;
+  }
+  @media (max-width: 400px) {
+    width: 40%;
+  }
+  @media (max-width: 320px) {
+    width: 45%;
+  }
+`;
+
 const Post = () => {
   //Routing para obtener el id actual
   const router = useRouter();
@@ -152,7 +174,10 @@ const Post = () => {
     query: { id: postId },
   } = router;
 
+  //Authorization Context
   const { user } = useContext(AuthContext);
+
+  //State Values
   const [values, setValues] = useState({});
 
   const { loading, data, error } = useQuery(FETCH_POST_QUERY, {
@@ -176,18 +201,6 @@ const Post = () => {
     );
   }
 
-  const onChange = (e) => {
-    setValues({
-      ...values,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    console.log(values.comment);
-  };
-
   if (!data)
     return (
       <Layout>
@@ -206,6 +219,49 @@ const Post = () => {
   } = data.getPost;
 
   const LikeInfo = { id, likes, likeCount };
+
+  const onChange = (e) => {
+    setValues({
+      ...values,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    console.log(values.comment);
+  };
+
+  const DeletePostAlert = () => {
+    Swal.fire({
+      title: "<h2>Are you sure?</h2>",
+      html: "<h2>You won't be able to revert this!</h2>",
+      icon: "warning",
+      width: "40rem",
+      padding: "5rem",
+      buttonsStyling: false,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      confirmButtonClass: "Alert-Button",
+      cancelButtonText: "Cancel",
+      cancelButtonClass: "Alert-Button-Cancel",
+    }).then((result) => {
+      if (result.value) {
+        Swal.fire({
+          title: "<h2>Deleted</h2>",
+          html: "<h2>Your Post has been deleted.</h2>",
+          icon: "success",
+          width: "30rem",
+          padding: "1rem",
+          buttonsStyling: false,
+          confirmButtonClass: "Alert-Button",
+          confirmButtonText: "OK",
+        });
+      }
+    });
+  };
 
   return (
     <Layout>
@@ -279,29 +335,9 @@ const Post = () => {
               )}
             </CommentContainer>
           </PostCardContainer>
-          <h2
-            css={css`
-              width: 30%;
-              text-align: center;
-              background-color: red;
-              color: white;
-              margin: 1rem auto;
-              border-radius: 0.7rem;
-              cursor: pointer;
-
-              @media (max-width: 500px) {
-                width: 35%;
-              }
-              @media (max-width: 400px) {
-                width: 40%;
-              }
-              @media (max-width: 320px) {
-                width: 45%;
-              }
-            `}
-          >
-            Delete Post
-          </h2>
+          {user && user.username === username && (
+            <DeleteButton>Delete Post</DeleteButton>
+          )}
         </>
       )}
     </Layout>

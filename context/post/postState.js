@@ -9,7 +9,7 @@ import {
   GET_POSTS,
   GET_POSTS_ERROR,
   ADD_POST,
-  LIKE_POST,
+  DELETE_POST,
 } from "../../types/index";
 
 const PostState = (props) => {
@@ -53,6 +53,13 @@ const PostState = (props) => {
     });
   };
 
+  const DeletePost = (postId) => {
+    dispatch({
+      type: DELETE_POST,
+      payload: postId,
+    });
+  };
+
   return (
     <PostContext.Provider
       value={{
@@ -60,6 +67,7 @@ const PostState = (props) => {
         loadingPosts: state.loadingPosts,
         errorPosts: state.errorPosts,
         AddPost,
+        DeletePost,
       }}
     >
       {props.children}

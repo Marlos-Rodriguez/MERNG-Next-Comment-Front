@@ -1,4 +1,9 @@
-import { GET_POSTS, GET_POSTS_ERROR, ADD_POST } from "../../types/index";
+import {
+  GET_POSTS,
+  GET_POSTS_ERROR,
+  ADD_POST,
+  DELETE_POST,
+} from "../../types/index";
 
 const PostReducer = (state, action) => {
   switch (action.type) {
@@ -13,7 +18,6 @@ const PostReducer = (state, action) => {
       return {
         ...state,
         posts: [action.payload, ...state.posts],
-        newPost: action.payload,
       };
 
     case GET_POSTS_ERROR:
@@ -21,6 +25,12 @@ const PostReducer = (state, action) => {
         ...state,
         errorPosts: action.payload,
         loadingPosts: false,
+      };
+
+    case DELETE_POST:
+      return {
+        ...state,
+        posts: state.posts.filter((post) => post.id !== action.payload),
       };
 
     default:

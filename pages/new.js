@@ -85,7 +85,7 @@ const NewPost = () => {
                   font-weight: bold;
                 `}
               >
-                Post
+                Post:
               </label>
               <textarea
                 id="body"

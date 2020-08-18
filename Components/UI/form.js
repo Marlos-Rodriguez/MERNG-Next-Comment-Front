@@ -22,19 +22,37 @@ export const Campo = styled.div`
   display: flex;
   align-items: center;
   label {
-    flex: 0 0 150px;
+    flex: 0 0 100px;
     font-size: 1.8rem;
   }
   input,
   textarea {
     flex: 1;
     padding: 1rem;
-    border-radius: 0.8rem;
+    border-radius: 0.6rem;
     border: 1px solid #454545;
     background-color: white;
   }
   textarea {
-    height: 400px;
+    height: 300px;
+  }
+
+  @media (max-width: 425px) {
+    display: block;
+    label {
+      position: relative;
+      align-self: center;
+      margin: 0 auto;
+      text-align: center;
+      font-size: 2.2rem;
+    }
+    input {
+      width: 100%;
+      height: 5rem;
+    }
+    textarea {
+      width: 100%;
+    }
   }
 `;
 
