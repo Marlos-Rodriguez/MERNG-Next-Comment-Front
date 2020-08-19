@@ -6,6 +6,7 @@ import moment from "moment";
 
 const CommentContent = styled.div`
   width: 100%;
+  max-width: 100%;
   position: relative;
   background-color: #ffffff;
   padding: 1rem 1rem 0 1rem;
@@ -31,7 +32,17 @@ const CommentCreateAt = styled.p`
   margin: 0;
 `;
 
-const CommentCardContainer = ({ comment }) => {
+const DeleteButton = styled.p`
+  position: relative;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  font-size: 1.2rem;
+  color: red;
+  cursor: pointer;
+`;
+
+const CommentCardContainer = ({ comment, actualUser }) => {
   const { body, username, createAt } = comment;
   return (
     <>
@@ -60,6 +71,18 @@ const CommentCardContainer = ({ comment }) => {
           </p>
         </div>
         <CommentUser>{username}</CommentUser>
+        {actualUser && actualUser.username === username && (
+          <div
+            css={css`
+              width: 50%;
+              padding: 0;
+              margin: 0 auto;
+            `}
+          >
+            <DeleteButton>Delete</DeleteButton>
+          </div>
+        )}
+
         <div
           css={css`
             width: 100%;

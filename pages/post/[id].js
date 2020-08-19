@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/react-hooks";
 
 import { css } from "@emotion/core";
 import styled from "@emotion/styled";
@@ -11,13 +11,14 @@ import moment from "moment";
 import Layout from "../../Components/layout/layout";
 import PostCardContainer from "../../Components/UI/postCardContainer";
 import CommentCardContainer from "../../Components/layout/commentCard";
-import { InputSubmit } from "../../Components/UI/form";
 
 import PageLikeButton from "../../Components/layout/PageLikeButton";
+import NewCommentForm from "../../Components/layout/newComment";
 
 import AuthContext from "../../context/auth/authContext";
+import PostsContext from "../../context/post/postContext";
 
-import { FETCH_POST_QUERY, DELETE_POST } from "../../util/graphql";
+import { FETCH_POST_QUERY } from "../../util/graphql";
 
 const CommentCard = styled.div`
   min-width: 280px;
@@ -97,35 +98,6 @@ const CommentContainer = styled.div`
   }
 `;
 
-const NewComment = styled.form`
-  background-color: #ffffff;
-  padding: 1rem;
-  border-radius: 1rem;
-  margin-bottom: 1.5rem;
-  width: 100%;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  -webkit-box-shadow: 10px 10px 30px #0000001e;
-  box-shadow: 10px 10px 30px #0000001e;
-`;
-
-const NewCommentTextArea = styled.textarea`
-  width: 100%;
-  height: 7rem;
-  max-width: 90%;
-  max-height: 7rem;
-`;
-
-const InputNewComment = styled(InputSubmit)`
-  width: 20%;
-  font-size: 1.5rem;
-  text-transform: none;
-  padding: 1rem 0;
-  @media (max-width: 600px) {
-    width: 35%;
-  }
-`;
-
 const CardUserInfo = styled.div`
   display: flex;
   flex-direction: column;
@@ -177,8 +149,8 @@ const Post = () => {
   //Authorization Context
   const { user } = useContext(AuthContext);
 
-  //State Values
-  const [values, setValues] = useState({});
+  //Posts Context / Function for delete Post
+  const { DeletePost } = useContext(PostsContext);
 
   const { loading, data, error } = useQuery(FETCH_POST_QUERY, {
     variables: {
@@ -220,18 +192,6 @@ const Post = () => {
 
   const LikeInfo = { id, likes, likeCount };
 
-  const onChange = (e) => {
-    setValues({
-      ...values,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    console.log(values.comment);
-  };
-
   const DeletePostAlert = () => {
     Swal.fire({
       title: "<h2>Are you sure?</h2>",
@@ -259,6 +219,8 @@ const Post = () => {
           confirmButtonClass: "Alert-Button",
           confirmButtonText: "OK",
         });
+        DeletePost(id);
+        Router.push("/");
       }
     });
   };
@@ -281,6 +243,9 @@ const Post = () => {
                   <p
                     css={css`
                       padding: 1rem 1rem 0 1rem;
+                      @media (max-width: 425px) {
+                        padding: 1rem;
+                      }
                     `}
                   >
                     {body}
@@ -310,24 +275,16 @@ const Post = () => {
               <PageLikeButton post={LikeInfo} />
             </CommentTitleContainer>
             <CommentContainer>
-              {user && (
-                <NewComment onSubmit={onSubmit} noValidate>
-                  <h2>New Comment </h2>
-                  <NewCommentTextArea
-                    id="comment"
-                    placeholder="Comment"
-                    name="comment"
-                    value={values.comment}
-                    onChange={onChange}
-                  />
-                  <InputNewComment type="submit" value="Submit" />
-                </NewComment>
-              )}
+              {user && <NewCommentForm postId={id} />}
 
               {commentCount > 0 ? (
                 comments.map((comment) => {
                   return (
-                    <CommentCardContainer key={comment.id} comment={comment} />
+                    <CommentCardContainer
+                      key={comment.id}
+                      comment={comment}
+                      actualUser={user}
+                    />
                   );
                 })
               ) : (
@@ -336,7 +293,7 @@ const Post = () => {
             </CommentContainer>
           </PostCardContainer>
           {user && user.username === username && (
-            <DeleteButton>Delete Post</DeleteButton>
+            <DeleteButton onClick={DeletePostAlert}>Delete Post</DeleteButton>
           )}
         </>
       )}

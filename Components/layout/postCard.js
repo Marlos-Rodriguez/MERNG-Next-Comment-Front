@@ -42,10 +42,6 @@ const CommentCardContent = styled.div`
     text-align: left;
     margin: 0;
   }
-
-  div {
-    display: inline-flex;
-  }
 `;
 
 const Button = styled.a`
@@ -67,11 +63,14 @@ const Button = styled.a`
 `;
 
 const CardUserInfo = styled.div`
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   width: 50px;
   margin: 0;
   padding: 0;
+  @media (max-width: 425px) {
+    width: 75px;
+  }
 `;
 
 const CardUserName = styled.p`
@@ -84,10 +83,12 @@ const CardUserName = styled.p`
 
 const CardImage = styled.img`
   width: 50px;
-  height: 50px;
   margin: 0;
   margin-top: 1.5rem;
   padding: 0;
+  @media (max-width: 425px) {
+    width: 75px;
+  }
 `;
 
 const CardBody = styled.p`
@@ -106,8 +107,12 @@ const PostCard = ({
       <CommentCardContent>
         <div
           css={css`
+            display: inline-flex;
             width: 100%;
             padding-left: 1rem;
+            @media (max-width: 425px) {
+              display: inline-block;
+            }
           `}
         >
           <CardUserInfo>
@@ -124,6 +129,7 @@ const PostCard = ({
             margin-left: auto;
             margin-bottom: 0.5rem;
             width: 70%;
+            display: inline-flex;
           `}
         >
           <Link href="/post/[id]" as={`/post/${id}`}>
@@ -152,17 +158,19 @@ const PostCard = ({
           </Link>
           <LinkButton user={actualUser} post={LikeInfo} />
           {actualUser && actualUser.username === username && (
-            <Button>
-              <p
-                css={css`
-                  color: red;
-                  font-size: 3rem;
-                `}
-              >
-                {" "}
-                &#128465;
-              </p>
-            </Button>
+            <Link href="/post/[id]" as={`/post/${id}`}>
+              <Button>
+                <p
+                  css={css`
+                    color: red;
+                    font-size: 3rem;
+                  `}
+                >
+                  {" "}
+                  &#128465;
+                </p>
+              </Button>
+            </Link>
           )}
         </div>
 

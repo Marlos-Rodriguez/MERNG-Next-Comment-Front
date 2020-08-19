@@ -2,14 +2,19 @@ import React, { useEffect, useReducer } from "react";
 import PostContext from "./postContext";
 import PostReducer from "./postReducer";
 
-import { useQuery } from "@apollo/react-hooks";
-import { FETCH_POSTS_QUERY } from "../../util/graphql";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import {
+  FETCH_POSTS_QUERY,
+  DELETE_POST,
+  CREATE_COMMENT_MUTATION,
+} from "../../util/graphql";
 
 import {
   GET_POSTS,
   GET_POSTS_ERROR,
   ADD_POST,
-  DELETE_POST,
+  DELETE_POST_STATE,
+  CREATE_COMMENT_STATE,
 } from "../../types/index";
 
 const PostState = (props) => {
@@ -31,6 +36,18 @@ const PostState = (props) => {
   }, [loading]);
 
   const [state, dispatch] = useReducer(PostReducer, initialState);
+
+  const [deletePostMutation] = useMutation(DELETE_POST);
+
+  const [createCommentMutation] = useMutation(CREATE_COMMENT_MUTATION, {
+    update(_, { data }) {
+      console.log(data);
+    },
+    onError(err) {
+      console.log(err);
+    },
+    variables: { postId: "5f36cfe27abe1b148c063253", body: "New comment 2" },
+  });
 
   const GetPosts = (posts) => {
     dispatch({
@@ -54,10 +71,16 @@ const PostState = (props) => {
   };
 
   const DeletePost = (postId) => {
+    deletePostMutation({ variables: { postId } });
     dispatch({
-      type: DELETE_POST,
+      type: DELETE_POST_STATE,
       payload: postId,
     });
+  };
+
+  const CreateComment = (commentInfo) => {
+    console.log(commentInfo);
+    createCommentMutation();
   };
 
   return (
@@ -68,6 +91,7 @@ const PostState = (props) => {
         errorPosts: state.errorPosts,
         AddPost,
         DeletePost,
+        CreateComment,
       }}
     >
       {props.children}

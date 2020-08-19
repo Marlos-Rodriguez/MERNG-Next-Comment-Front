@@ -2,7 +2,7 @@ import {
   GET_POSTS,
   GET_POSTS_ERROR,
   ADD_POST,
-  DELETE_POST,
+  DELETE_POST_STATE,
 } from "../../types/index";
 
 const PostReducer = (state, action) => {
@@ -27,7 +27,7 @@ const PostReducer = (state, action) => {
         loadingPosts: false,
       };
 
-    case DELETE_POST:
+    case DELETE_POST_STATE:
       return {
         ...state,
         posts: state.posts.filter((post) => post.id !== action.payload),
