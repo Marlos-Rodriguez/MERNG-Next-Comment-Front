@@ -22,7 +22,7 @@ const Login = () => {
     password: "",
   });
 
-  const [loginUser, { loading }] = useMutation(LOGIN_USER, {
+  const [loginUser] = useMutation(LOGIN_USER, {
     update(_, { data: { login: userData } }) {
       context.Login(userData);
       Router.push("/");

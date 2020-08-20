@@ -7,6 +7,7 @@ import {
   FETCH_POSTS_QUERY,
   DELETE_POST,
   CREATE_COMMENT_MUTATION,
+  DELETE_COMMENT_MUTATION,
 } from "../../util/graphql";
 
 import {
@@ -39,14 +40,19 @@ const PostState = (props) => {
 
   const [deletePostMutation] = useMutation(DELETE_POST);
 
+  const [deleteCommentMutation] = useMutation(DELETE_COMMENT_MUTATION, {
+    update(_, { data: { deleteComment } }) {
+      console.log("Deleted Comment");
+    },
+  });
+
   const [createCommentMutation] = useMutation(CREATE_COMMENT_MUTATION, {
-    update(_, { data }) {
-      console.log(data);
+    update(_, { data: { createComment } }) {
+      dispatch({
+        type: CREATE_COMMENT_STATE,
+        payload: createComment,
+      });
     },
-    onError(err) {
-      console.log(err);
-    },
-    variables: { postId: "5f36cfe27abe1b148c063253", body: "New comment 2" },
   });
 
   const GetPosts = (posts) => {
@@ -79,8 +85,11 @@ const PostState = (props) => {
   };
 
   const CreateComment = (commentInfo) => {
-    console.log(commentInfo);
-    createCommentMutation();
+    createCommentMutation({ variables: commentInfo });
+  };
+
+  const DeleteComment = (commentInfo) => {
+    deleteCommentMutation({ variables: commentInfo });
   };
 
   return (
@@ -92,6 +101,7 @@ const PostState = (props) => {
         AddPost,
         DeletePost,
         CreateComment,
+        DeleteComment,
       }}
     >
       {props.children}

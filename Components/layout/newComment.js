@@ -1,10 +1,11 @@
 import React, { useState, useContext } from "react";
-import { useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 
 import styled from "@emotion/styled";
 
 import { InputSubmit } from "../UI/form";
+import { useForm } from "../../util/hooks";
+
+import { Error } from "../UI/form";
 
 import PostsContext from "../../context/post/postContext";
 
@@ -38,32 +39,32 @@ const InputNewComment = styled(InputSubmit)`
 `;
 
 const NewCommentForm = ({ postId }) => {
-  //State Values
-  const [values, setValues] = useState({
+  const { onChange, onSubmit, values } = useForm(createCommentCallback, {
     postId,
+    body: "",
   });
+
+  //Error State
+  const [error, setError] = useState({});
 
   //Post Context / Create comment function
   const { CreateComment } = useContext(PostsContext);
 
-  const [createCommentMutation] = useMutation(CREATE_COMMENT_MUTATION, {
-    update(_, { data: { createComment } }) {
-      console.log(createComment);
-    },
-    variables: values,
-  });
-
-  const onChange = (e) => {
-    setValues({
-      ...values,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    createCommentMutation();
-  };
+  function createCommentCallback() {
+    if (values.body.trim() === "") {
+      setError({
+        message: "Comment must not be empty",
+      });
+    } else if (values.body.length > 350) {
+      setError({
+        message: "Comment is too long, less of 350 characters",
+      });
+    } else {
+      CreateComment(values);
+      setError({});
+    }
+    values.body = "";
+  }
 
   return (
     <NewComment onSubmit={onSubmit} noValidate>
@@ -75,23 +76,10 @@ const NewCommentForm = ({ postId }) => {
         value={values.body}
         onChange={onChange}
       />
+      {Object.keys(error).length > 0 && <Error>{error.message}</Error>}
       <InputNewComment type="submit" value="Submit" />
     </NewComment>
   );
 };
-
-const CREATE_COMMENT_MUTATION = gql`
-  mutation createComment($postId: String!, $body: String!) {
-    createComment(postId: $postId, body: $body) {
-      id
-      body
-      comments {
-        id
-        body
-      }
-      commentCount
-    }
-  }
-`;
 
 export default NewCommentForm;

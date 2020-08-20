@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import { css } from "@emotion/core";
 import styled from "@emotion/styled";
 import moment from "moment";
+
+import PostContext from "../../context/post/postContext";
+
+import AlertHook from "../../util/alertHooks";
 
 const CommentContent = styled.div`
   width: 100%;
@@ -42,8 +46,17 @@ const DeleteButton = styled.p`
   cursor: pointer;
 `;
 
-const CommentCardContainer = ({ comment, actualUser }) => {
-  const { body, username, createAt } = comment;
+const CommentCardContainer = ({ comment, actualUser, postId }) => {
+  const { id, body, username, createAt } = comment;
+
+  const { DeleteComment } = useContext(PostContext);
+
+  function DelteCommentCallback() {
+    const commentInfo = { postId, commentId: id };
+
+    DeleteComment(commentInfo);
+  }
+
   return (
     <>
       {" "}
@@ -79,7 +92,9 @@ const CommentCardContainer = ({ comment, actualUser }) => {
               margin: 0 auto;
             `}
           >
-            <DeleteButton>Delete</DeleteButton>
+            <DeleteButton onClick={() => AlertHook(DelteCommentCallback)}>
+              Delete
+            </DeleteButton>
           </div>
         )}
 
