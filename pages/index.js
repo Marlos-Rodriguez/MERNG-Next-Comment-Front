@@ -10,6 +10,7 @@ import AuthContext from "../context/auth/authContext";
 const Home = () => {
   //Get Context Post State
   const { posts, loadingPosts, errorPosts } = useContext(PostContext);
+  //Get User Context
   const { user } = useContext(AuthContext);
 
   if (loadingPosts)

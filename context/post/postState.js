@@ -2,7 +2,9 @@ import React, { useEffect, useReducer } from "react";
 import PostContext from "./postContext";
 import PostReducer from "./postReducer";
 
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/react-hooks"; //Apollo Query & Mutation
+
+//GraphQL commands
 import {
   FETCH_POSTS_QUERY,
   DELETE_POST,
@@ -10,12 +12,14 @@ import {
   DELETE_COMMENT_MUTATION,
 } from "../../util/graphql";
 
+//Types Dispach
 import {
   GET_POSTS,
   GET_POSTS_ERROR,
   ADD_POST,
   DELETE_POST_STATE,
   CREATE_COMMENT_STATE,
+  DELETE_COMMENT_STATE,
 } from "../../types/index";
 
 const PostState = (props) => {
@@ -26,8 +30,10 @@ const PostState = (props) => {
     newPost: null,
   };
 
+  //Query function for all Post of Index Page
   const { loading, data, error } = useQuery(FETCH_POSTS_QUERY);
 
+  //Load in the start if loading ends and no error happends
   useEffect(() => {
     if (!loading && !error) {
       GetPosts(data.getPosts);
@@ -36,16 +42,25 @@ const PostState = (props) => {
     }
   }, [loading]);
 
+  //Use Reducer Dispatch
   const [state, dispatch] = useReducer(PostReducer, initialState);
 
+  //Apollo Mutations
+
+  //Delete Post
   const [deletePostMutation] = useMutation(DELETE_POST);
 
+  //Delete Comment
   const [deleteCommentMutation] = useMutation(DELETE_COMMENT_MUTATION, {
     update(_, { data: { deleteComment } }) {
-      console.log("Deleted Comment");
+      dispatch({
+        type: DELETE_COMMENT_STATE,
+        payload: deleteComment,
+      });
     },
   });
 
+  //Create Comment
   const [createCommentMutation] = useMutation(CREATE_COMMENT_MUTATION, {
     update(_, { data: { createComment } }) {
       dispatch({
@@ -55,6 +70,9 @@ const PostState = (props) => {
     },
   });
 
+  //State Functions
+
+  //Set posts to State
   const GetPosts = (posts) => {
     dispatch({
       type: GET_POSTS,
@@ -62,6 +80,7 @@ const PostState = (props) => {
     });
   };
 
+  //Set errors to state
   const GetPostsError = (error) => {
     dispatch({
       type: GET_POSTS_ERROR,
@@ -69,6 +88,7 @@ const PostState = (props) => {
     });
   };
 
+  //Add new post in state
   const AddPost = (post) => {
     dispatch({
       type: ADD_POST,
@@ -76,6 +96,7 @@ const PostState = (props) => {
     });
   };
 
+  //Delete Post
   const DeletePost = (postId) => {
     deletePostMutation({ variables: { postId } });
     dispatch({
@@ -84,10 +105,12 @@ const PostState = (props) => {
     });
   };
 
+  //Create comment
   const CreateComment = (commentInfo) => {
     createCommentMutation({ variables: commentInfo });
   };
 
+  //Delete Comment
   const DeleteComment = (commentInfo) => {
     deleteCommentMutation({ variables: commentInfo });
   };

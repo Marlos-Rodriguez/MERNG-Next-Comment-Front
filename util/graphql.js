@@ -1,5 +1,8 @@
 import gql from "graphql-tag";
 
+// GraphQL Query, Mutations
+
+//Get all the posts
 export const FETCH_POSTS_QUERY = gql`
   {
     getPosts {
@@ -7,12 +10,6 @@ export const FETCH_POSTS_QUERY = gql`
       body
       username
       commentCount
-      comments {
-        id
-        username
-        body
-        createAt
-      }
       likeCount
       likes {
         id
@@ -23,6 +20,7 @@ export const FETCH_POSTS_QUERY = gql`
   }
 `;
 
+//Get only One Post
 export const FETCH_POST_QUERY = gql`
   query($postId: ID!) {
     getPost(postId: $postId) {
@@ -129,21 +127,7 @@ export const DELETE_COMMENT_MUTATION = gql`
   mutation createComment($postId: ID!, $commentId: ID!) {
     deleteComment(postId: $postId, commentId: $commentId) {
       id
-      body
-      username
-      createAt
-      likeCount
-      likes {
-        id
-        username
-      }
       commentCount
-      comments {
-        id
-        username
-        body
-        createAt
-      }
     }
   }
 `;

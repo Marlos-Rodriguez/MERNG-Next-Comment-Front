@@ -1,24 +1,31 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/react-hooks";
 
+//Styled Componets
 import { css } from "@emotion/core";
 import styled from "@emotion/styled";
+
 import moment from "moment";
 
+//Layout Components
+import PageLikeButton from "../../Components/layout/PageLikeButton";
+import NewCommentForm from "../../Components/layout/newComment";
 import Layout from "../../Components/layout/layout";
+
+//UI Components
 import PostCardContainer from "../../Components/UI/postCardContainer";
 import CommentCardContainer from "../../Components/layout/commentCard";
 
-import PageLikeButton from "../../Components/layout/PageLikeButton";
-import NewCommentForm from "../../Components/layout/newComment";
-
+//Context
 import AuthContext from "../../context/auth/authContext";
 import PostsContext from "../../context/post/postContext";
 
+//Alert Utilite
 import AlertHook from "../../util/alertHooks";
 
+//GraphQL language "Get Only one Post"
 import { FETCH_POST_QUERY } from "../../util/graphql";
 
 const CommentCard = styled.div`
@@ -141,7 +148,7 @@ const DeleteButton = styled.h2`
 `;
 
 const Post = () => {
-  //Routing para obtener el id actual
+  //Get the actual ID from Routing
   const router = useRouter();
   const {
     query: { id: postId },
@@ -174,22 +181,14 @@ const Post = () => {
     );
   }
 
+  //If The post no exits 404
   if (!data)
     return (
       <Layout>
         <h1>Post Not Found</h1>
       </Layout>
     );
-  const {
-    id,
-    body,
-    username,
-    createAt,
-    commentCount,
-    likeCount,
-    likes,
-    comments,
-  } = data.getPost;
+  const { id, body, username, createAt, commentCount, likeCount, likes, comments } = data.getPost;
 
   const LikeInfo = { id, likes, likeCount };
 
@@ -268,9 +267,7 @@ const Post = () => {
             </CommentContainer>
           </PostCardContainer>
           {user && user.username === username && (
-            <DeleteButton onClick={() => AlertHook(DeletePostAlert)}>
-              Delete Post
-            </DeleteButton>
+            <DeleteButton onClick={() => AlertHook(DeletePostAlert)}>Delete Post</DeleteButton>
           )}
         </>
       )}
