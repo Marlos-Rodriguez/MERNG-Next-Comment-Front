@@ -6,7 +6,7 @@ import { ApolloProvider } from "@apollo/react-hooks";
 import { setContext } from "apollo-link-context";
 
 const httpLink = createHttpLink({
-  uri: "https://dry-fjord-14311.herokuapp.com",
+  uri: "https://comment-back.fly.dev",
 });
 
 const authLink = setContext(() => {
